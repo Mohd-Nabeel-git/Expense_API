@@ -1,0 +1,105 @@
+openapi: 3.0.0
+info:
+  title: Expense Tracker API
+  version: 1.0.0
+  description: API documentation for the Expense Tracker project
+servers:
+  - url: http://localhost:3000
+  - url: https://expense-api-1-hyg5.onrender.com/
+paths:
+  /api/auth/register:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                email: { type: string }
+                password: { type: string }
+                monthlyBudget: { type: number }
+      responses:
+        "201":
+          description: User registered
+  /api/auth/login:
+    post:
+      summary: Login user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string }
+                password: { type: string }
+      responses:
+        "200":
+          description: Login successful
+  /api/expenses:
+    get:
+      summary: Get all expenses
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: List of expenses
+    post:
+      summary: Add a new expense
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount: { type: number }
+                category: { type: string }
+                description: { type: string }
+      responses:
+        "201":
+          description: Expense added
+  /api/expenses/{id}:
+    put:
+      summary: Update an expense
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Expense updated
+    delete:
+      summary: Delete an expense
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Expense deleted
+  /api/expenses/summary:
+    get:
+      summary: Get monthly summary
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Monthly summary
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
